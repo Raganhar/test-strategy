@@ -1,6 +1,10 @@
-## Define github secrets:
+![alt text](https://github.com/Raganhar/test-strategy/blob/master/test_types.png?raw=true)
 
-AWS_ACCESS_KEY\
-AWS_REGION\
-AWS_SECRET_ACCESS_KEY\
-PULUMI_ACCESS_TOKEN
+TODO:
+- fix naming of tests to help devs name it correctly
+- make examples of what NOT to do
+- make examples of proper middleware testing
+- make graphical representation of the different areas of responsibility
+- - What is controller & middleware
+- - Where does unit testing fit in
+- - testing IO
