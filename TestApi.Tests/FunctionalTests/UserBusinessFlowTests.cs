@@ -17,15 +17,22 @@ public class UserBusinessFlowTests
 
     public UserBusinessFlowTests()
     {
-        var apiWebFactory = new TestWebApplicationFactory<UserResponse>();
-        _provider = apiWebFactory.Services.CreateScope().ServiceProvider;
-        _userController = _provider.GetRequiredService<UserController>();
-        _service = _provider.GetRequiredService<IBusinessLogicImplementation>();
+        ;
     }
 
     [Test]
     public async Task HappyPath()
     {
+        
+        
+        var apiWebFactory = new TestWebApplicationFactory<UserResponse>();
+        _provider = apiWebFactory.Services.CreateScope().ServiceProvider;
+        _userController = _provider.GetRequiredService<UserController>();
+        _service = _provider.GetRequiredService<IBusinessLogicImplementation>();
+        var appContext = _provider.GetRequiredService<RandomDbContext>();
+        appContext.Database.Migrate();
+        
+        
         var userRequest = new UserRequest
         {
             Age = 9,
@@ -42,7 +49,5 @@ public class UserBusinessFlowTests
     [SetUp]
     public void Setup()
     {
-        var appContext = _provider.GetRequiredService<RandomDbContext>();
-        appContext.Database.Migrate();
     }
 }
