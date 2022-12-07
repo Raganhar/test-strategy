@@ -21,8 +21,8 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("")]
-    public async Task<IActionResult> Get([FromServices]IBusinessLogicImplementation service,[Required]string userId)
+    public async Task<IActionResult> Get([FromServices]IBusinessLogicImplementation service,[Required]int? userId)
     {
-        return Ok(await service.User(userId));
+        return Ok(await service.User(userId.Value));
     }
 }

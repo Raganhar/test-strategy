@@ -1,10 +1,12 @@
 using System.Net;
 using Amazon;
 using Amazon.S3;
+using DockerWebAPI.DbStuff;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.Aws.S3;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TestApi.Io;
 using TestApi.Io.ExternalService;
@@ -19,13 +21,19 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Logging.AddSerilog();
-
+//
+// builder.Services.AddDbContext<RandomDbContext>(options =>
+// {
+//     var connectionString = @"Server=localhost;Database=bob;Uid=root;Pwd=root;";
+//     options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString));
+// });
 builder.Services.AddControllers().AddControllersAsServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IBusinessLogicImplementation,BusinessLogicImplementation>();
 builder.Services.AddScoped<IDbRepoImplementation,DbRepoImplementation>();
 builder.Services.AddScoped<IThirdPartyService,ThirdPartyService>();
+
 
 var app = builder.Build();
 

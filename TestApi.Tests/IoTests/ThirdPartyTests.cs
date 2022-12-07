@@ -7,6 +7,7 @@ using TestApi.Io.ExternalService;
 
 namespace TestApi.Tests.IoTests;
 
+[Ignore("s")]
 public class ThirdPartyTests
 {
     private ThirdPartyService _service;

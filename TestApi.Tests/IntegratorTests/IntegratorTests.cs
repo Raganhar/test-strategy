@@ -10,6 +10,7 @@ using TestApi.Services;
 
 namespace TestApi.Tests.FunctionalTests;
 
+[Ignore("s")]
 public class IntegratorTests
 {
     private IFlurlRequest _flurlRequest;
@@ -26,7 +27,7 @@ public class IntegratorTests
         var res = await _flurlRequest.PostJsonAsync(userRequest);
         res.StatusCode.Should().Be(StatusCodes.Status200OK);
         var response = await res.GetJsonAsync<CreateUserResponse>();
-        response.Id.Should().NotBeNull();
+        response.Id.Should().NotBe(0);
     }
     
     [Test]

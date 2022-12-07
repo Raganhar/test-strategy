@@ -25,7 +25,7 @@ public class UserRequest
 
 public class CreateUserResponse
 {
-    public string Id { get; set; }
+    public int Id { get; set; }
 }
 
 public class UserResponse

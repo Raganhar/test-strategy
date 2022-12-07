@@ -9,6 +9,7 @@ using TestApi.Services;
 
 namespace TestApi.Tests.IoTests;
 
+[Ignore("s")]
 public class IoTest
 {
     private IDbRepoImplementation _repo;

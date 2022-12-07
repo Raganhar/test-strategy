@@ -8,7 +8,7 @@ namespace TestApi.Services;
 public interface IBusinessLogicImplementation
 {
     Task<CreateUserResponse?> SaveToDbIfConditionsAreRight(SomeInternalModel model);
-    Task<UserResponse> User(string userId);
+    Task<UserResponse?> User(int userId);
 }
 
 public class BusinessLogicImplementation : IBusinessLogicImplementation
@@ -16,8 +16,9 @@ public class BusinessLogicImplementation : IBusinessLogicImplementation
     private readonly ILogger _logger;
     private readonly IDbRepoImplementation _repoImplementation;
     private readonly IThirdPartyService _thirdPartyService;
-    
-    public BusinessLogicImplementation(ILogger<BusinessLogicImplementation> logger, IDbRepoImplementation repoImplementation, IThirdPartyService thirdPartyService)
+
+    public BusinessLogicImplementation(ILogger<BusinessLogicImplementation> logger,
+        IDbRepoImplementation repoImplementation, IThirdPartyService thirdPartyService)
     {
         _logger = logger;
         _repoImplementation = repoImplementation;
@@ -41,8 +42,10 @@ public class BusinessLogicImplementation : IBusinessLogicImplementation
             return null;
         }
     }
-    public async Task<UserResponse> User(string userId)
+
+    public async Task<UserResponse?> User(int userId)
     {
-        return await _repoImplementation.GetUser(userId);
+        var user = await _repoImplementation.GetUser(userId);
+        return user?.ToResponseModel();
     }
 }

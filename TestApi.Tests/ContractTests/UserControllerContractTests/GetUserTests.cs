@@ -6,6 +6,7 @@ using TestApi.Controllers.Weather.V1;
 
 namespace TestApi.Tests.ContractTests.UserControllerContractTests;
 
+[Ignore("s")]
 public class GetUserTests
 {
     private IFlurlRequest _flurlRequest;

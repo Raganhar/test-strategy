@@ -20,7 +20,7 @@ public class SmokeTest
     public async Task ThirdPartyServiceIsUp()
     {
         _thirdPartyService.CallExternalService().ReturnsForAnyArgs(true);
-        var userId = Guid.NewGuid().ToString();
+        var userId = Random.Shared.Next(Int32.MaxValue);
         _dbRepoImplementation.SaveData(null).ReturnsForAnyArgs(userId);
         
         var response= await _service.SaveToDbIfConditionsAreRight(new SomeInternalModel());
