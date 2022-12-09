@@ -14,4 +14,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true
+      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
+    - name: Test Report
+      ses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: JEST Tests            # Name of the check run which will be created
+        path: reports/jest-*.xml    # Path to test results
+        reporter: jest-junit   
