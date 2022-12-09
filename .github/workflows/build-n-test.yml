@@ -14,11 +14,12 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
+      run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore
+#      run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
     - name: Test Report
       ses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
       with:
-        name: JEST Tests            # Name of the check run which will be created
-        path: reports/jest-*.xml    # Path to test results
-        reporter: jest-junit   
+        name: Tests report stuff         # Name of the check run which will be created
+        path: TestApi.Tests/coverage.cobertura.xml    # Path to test results
+        reporter: dotnet-trx  
