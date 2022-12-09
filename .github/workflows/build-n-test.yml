@@ -17,7 +17,7 @@ jobs:
       run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore
 #      run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
     - name: Test Report
-      ses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: Tests report stuff         # Name of the check run which will be created
