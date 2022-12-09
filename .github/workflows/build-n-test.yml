@@ -16,13 +16,13 @@ jobs:
     - name: Test
       run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 #      run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
-      with:
-        name: Tests report stuff         # Name of the check run which will be created
-        path: TestApi.Tests/TestResults/test-results.trx    # Path to test results
-        reporter: dotnet-trx  
+#    - name: Test Report
+#      uses: dorny/test-reporter@v1
+#      if: success() || failure()    # run this step even if previous step failed
+#      with:
+#        name: Tests report stuff         # Name of the check run which will be created
+#        path: TestApi.Tests/TestResults/test-results.trx    # Path to test results
+#        reporter: dotnet-trx  
 
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.12
