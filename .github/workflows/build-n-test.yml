@@ -14,7 +14,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=teamcity
+      run: dotnet msbuild test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=teamcity
       
 #        /p:CoverletOutputFormat=cobertura
 #      run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --output .\coverage-reports\
