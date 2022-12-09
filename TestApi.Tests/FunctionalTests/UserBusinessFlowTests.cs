@@ -9,6 +9,7 @@ using TestApi.Services;
 
 namespace TestApi.Tests.ContractTests;
 
+[Ignore("s")]
 public class UserBusinessFlowTests
 {
     private UserController _userController;
