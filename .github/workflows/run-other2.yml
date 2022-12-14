@@ -3,7 +3,7 @@ name: run sanity tests 2
 on:
   workflow_run:
     workflows:
-      - run sanity tests
+      - run sanity [tests]
     types:
       - completed
 jobs:

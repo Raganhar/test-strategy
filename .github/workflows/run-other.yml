@@ -1,4 +1,4 @@
-name: run sanity tests
+name: run sanity [tests]
 
 on:
   workflow_run:
