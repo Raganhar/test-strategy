@@ -1,0 +1,13 @@
+name: run sanity tests 2
+
+on:
+  workflow_run:
+    workflows:
+      - run sanity tests
+    types:
+      - completed
+jobs:
+  build-n-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
