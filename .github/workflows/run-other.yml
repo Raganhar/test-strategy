@@ -15,4 +15,9 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
+      - name: bob
+        env:
+          GITHUB_CONTEXT: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v2
