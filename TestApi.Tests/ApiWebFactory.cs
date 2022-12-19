@@ -19,8 +19,6 @@ namespace TestApi.Tests;
 public class TestWebApplicationFactory<TStartup>
     : WebApplicationFactory<TStartup> where TStartup : class
 {
-    private Dictionary<Type, object> _servicesToReplace = new Dictionary<Type, object>();
-
     public MySqlTestcontainer _db = new TestcontainersBuilder<MySqlTestcontainer>()
         .WithDatabase(new MySqlTestcontainerConfiguration
         {
@@ -31,20 +29,25 @@ public class TestWebApplicationFactory<TStartup>
 
     public TestWebApplicationFactory()
     {
-        var startNew = Stopwatch.StartNew();
         _db.StartAsync().Wait();
-        Console.WriteLine(startNew.Elapsed);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureServices(services =>
+        builder.ConfigureTestServices(services =>
         {
             // services.RemoveAll(typeof(RandomDbContext));
             
             services.AddDbContext<RandomDbContext>(x =>
                 x.UseMySql(_db.ConnectionString, ServerVersion.AutoDetect(_db.ConnectionString)));
-            // // ReplaceServiceWithMock(services,_servicesToReplace);
+            var serviceProvider = services.BuildServiceProvider().CreateScope().ServiceProvider;    
+            var db = serviceProvider.GetRequiredService<RandomDbContext>();
+            var startNew = Stopwatch.StartNew();
+            db.Database.Migrate();
+            Console.WriteLine($"migrate {startNew.ElapsedMilliseconds}");
+            startNew.Restart();
+            SeedDatabase(db);
+            Console.WriteLine($"seed {startNew.ElapsedMilliseconds}");
         });
     }
 

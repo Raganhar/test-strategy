@@ -9,7 +9,6 @@ using TestApi.Services;
 
 namespace TestApi.Tests.IoTests;
 
-[Ignore("s")]
 public class IoTest
 {
     private IDbRepoImplementation _repo;
@@ -30,6 +29,5 @@ public class IoTest
     {
         var apiWebFactory = new TestWebApplicationFactory<UserResponse>();
         _repo = apiWebFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IDbRepoImplementation>();
-        
     }
 }
