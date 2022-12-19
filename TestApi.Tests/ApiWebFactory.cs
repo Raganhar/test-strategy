@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using NSubstitute;
 using NUnit.Framework;
+using Respawn;
 
 namespace TestApi.Tests;
 
@@ -26,6 +27,8 @@ public class TestWebApplicationFactory<TStartup>
             Password = "root",
             Username = "root",
         }).Build();
+
+    private Respawner _respawner;
 
     public TestWebApplicationFactory()
     {
@@ -42,13 +45,27 @@ public class TestWebApplicationFactory<TStartup>
                 x.UseMySql(_db.ConnectionString, ServerVersion.AutoDetect(_db.ConnectionString)));
             var serviceProvider = services.BuildServiceProvider().CreateScope().ServiceProvider;    
             var db = serviceProvider.GetRequiredService<RandomDbContext>();
-            var startNew = Stopwatch.StartNew();
-            db.Database.Migrate();
-            Console.WriteLine($"migrate {startNew.ElapsedMilliseconds}");
-            startNew.Restart();
-            SeedDatabase(db);
-            Console.WriteLine($"seed {startNew.ElapsedMilliseconds}");
+
+            var respawner = Respawn.Respawner.CreateAsync(_db.ConnectionString, new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.MySql,
+            });
+            respawner.Wait();
+            _respawner = respawner.Result;
+            SetupDatabase(db);
         });
+    }
+
+    private static void SetupDatabase(RandomDbContext db)
+    {
+        db.Database.Migrate();
+        SeedDatabase(db);
+    }
+
+    public void ResetDatabase()
+    {
+        _respawner.ResetAsync(_db.ConnectionString).Wait();
+        SetupDatabase(Services.CreateScope().ServiceProvider.GetRequiredService<RandomDbContext>());   
     }
 
     private static void SeedDatabase(RandomDbContext appContext)

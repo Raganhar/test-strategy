@@ -12,6 +12,7 @@ namespace TestApi.Tests.IoTests;
 public class IoTest
 {
     private IDbRepoImplementation _repo;
+    private TestWebApplicationFactory<UserResponse> _apiWebFactory;
 
     [Test]
     public async Task CreatesUserCorrectly()
@@ -24,10 +25,23 @@ public class IoTest
         // connect directly to db and validate that data is correct in database
     }
 
+    [Test]
+    public async Task GetTask()
+    {
+        var count = await _repo.GetCount();
+        count.Should().Be(100);
+    }
+
     [SetUp]
     public void Setup()
     {
-        var apiWebFactory = new TestWebApplicationFactory<UserResponse>();
-        _repo = apiWebFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IDbRepoImplementation>();
+        _apiWebFactory = new TestWebApplicationFactory<UserResponse>();
+        _repo = _apiWebFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IDbRepoImplementation>();
+    }
+
+    [TearDown]
+    public void reset()
+    {
+        _apiWebFactory.ResetDatabase();
     }
 }

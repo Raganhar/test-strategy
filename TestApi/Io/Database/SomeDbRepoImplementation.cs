@@ -9,6 +9,7 @@ public interface IDbRepoImplementation
 {
     Task<int> SaveData(SomeInternalModel data);
     Task<User?> GetUser(int userId);
+    Task<int> GetCount();
 }
 
 public class DbRepoImplementation : IDbRepoImplementation
@@ -36,5 +37,10 @@ public class DbRepoImplementation : IDbRepoImplementation
     public async Task<User?> GetUser(int userId)
     {
         return await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+    }
+
+    public async Task<int> GetCount()
+    {
+        return await _db.Users.CountAsync();
     }
 }
