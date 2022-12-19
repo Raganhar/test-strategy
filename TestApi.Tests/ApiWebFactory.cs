@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using MySql.Data.MySqlClient;
 using NSubstitute;
 using NUnit.Framework;
 using Respawn;
@@ -29,6 +30,7 @@ public class TestWebApplicationFactory<TStartup>
         }).Build();
 
     private Respawner _respawner;
+    private MySqlConnection _mySqlConnection;
 
     public TestWebApplicationFactory()
     {
@@ -45,10 +47,13 @@ public class TestWebApplicationFactory<TStartup>
                 x.UseMySql(_db.ConnectionString, ServerVersion.AutoDetect(_db.ConnectionString)));
             var serviceProvider = services.BuildServiceProvider().CreateScope().ServiceProvider;    
             var db = serviceProvider.GetRequiredService<RandomDbContext>();
-
-            var respawner = Respawn.Respawner.CreateAsync(_db.ConnectionString, new RespawnerOptions
+            _mySqlConnection = new MySql.Data.MySqlClient.MySqlConnection(_db.ConnectionString);
+            _mySqlConnection.Open();
+            var respawner = Respawn.Respawner.CreateAsync(_mySqlConnection, new RespawnerOptions
             {
                 DbAdapter = DbAdapter.MySql,
+                SchemasToInclude = new []{"somedb"},
+                
             });
             respawner.Wait();
             _respawner = respawner.Result;
@@ -64,7 +69,7 @@ public class TestWebApplicationFactory<TStartup>
 
     public void ResetDatabase()
     {
-        _respawner.ResetAsync(_db.ConnectionString).Wait();
+        _respawner.ResetAsync(_mySqlConnection).Wait();
         SetupDatabase(Services.CreateScope().ServiceProvider.GetRequiredService<RandomDbContext>());   
     }
 
@@ -82,15 +87,5 @@ public class TestWebApplicationFactory<TStartup>
     {
         _db.StopAsync().Wait();
         base.Dispose(disposing);
-    }
-
-    public static void ReplaceServiceWithMock(IServiceCollection services, Dictionary<Type, object> servicesToReplace)
-    {
-        foreach (var servicePair in servicesToReplace)
-        {
-            var businessLogicImplementation = services.Single(x => x.ServiceType == servicePair.Key);
-            services.Remove(businessLogicImplementation);
-            services.AddScoped(_ => servicePair.Value);
-        }
     }
 }

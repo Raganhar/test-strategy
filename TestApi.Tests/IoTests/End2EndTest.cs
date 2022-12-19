@@ -32,10 +32,15 @@ public class IoTest
         count.Should().Be(100);
     }
 
+    [OneTimeSetUp]
+    public void onetime()
+    {
+        _apiWebFactory = new TestWebApplicationFactory<UserResponse>();
+    }
+
     [SetUp]
     public void Setup()
     {
-        _apiWebFactory = new TestWebApplicationFactory<UserResponse>();
         _repo = _apiWebFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IDbRepoImplementation>();
     }
 
